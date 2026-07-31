@@ -113,9 +113,12 @@ m4_define([ADAPTER_SYM], [m4_argn([3], $1)])
 m4_define([ADAPTER_VAR], [enable_[]ADAPTER_ARG($1)])
 m4_define([ADAPTER_OPT], [m4_translit(ADAPTER_ARG($1), [_], [-])])
 
+
+m4_define([FTD2XX_ADAPTERS],
+    [[[ftdi], [MPSSE mode of FTDI based devices], [FTDI]]])
+
 m4_define([USB1_ADAPTERS],
-	[[[ftdi], [MPSSE mode of FTDI based devices], [FTDI]],
-	[[stlink], [ST-Link Programmer], [HLADAPTER_STLINK]],
+	[[[stlink], [ST-Link Programmer], [HLADAPTER_STLINK]],
 	[[ti_icdi], [TI ICDI JTAG Programmer], [HLADAPTER_ICDI]],
 	[[ulink], [Keil ULINK JTAG Programmer], [ULINK]],
 	[[usb_blaster_2], [Altera USB-Blaster II Compatible], [USB_BLASTER_2]],
@@ -254,6 +257,7 @@ m4_define([AC_ARG_ADAPTERS], [
 ])
 
 AC_ARG_ADAPTERS([
+  FTD2XX_ADAPTERS,
   USB1_ADAPTERS,
   HIDAPI_ADAPTERS,
   HIDAPI_USB1_ADAPTERS,
@@ -607,6 +611,13 @@ AS_IF([test "x$build_xlnx_pcie_xvc" = "xyes"], [
   AC_DEFINE([BUILD_XLNX_PCIE_XVC], [0], [0 if you don't want Xilinx XVC/PCIe driver.])
 ])
 
+AC_CHECK_LIB([ftd2xx], [FT_CreateDeviceInfoList], [
+    use_ftd2xx=yes
+   	AC_DEFINE([HAVE_FTD2XX], [1], [Define if you have ftd2xx])
+  ], [
+    use_ftd2xx=no
+])
+
 PKG_CHECK_MODULES([LIBUSB1], [libusb-1.0], [
 	use_libusb1=yes
 	AC_DEFINE([HAVE_LIBUSB1], [1], [Define if you have libusb-1.x])
@@ -683,6 +694,7 @@ m4_define([PROCESS_ADAPTERS], [
   ])
 ])
 
+PROCESS_ADAPTERS([FTD2XX_ADAPTERS], ["x$use_ftd2xx"="xyes"], [ftd2xx])
 PROCESS_ADAPTERS([USB1_ADAPTERS], ["x$use_libusb1" = "xyes"], [libusb-1.x])
 PROCESS_ADAPTERS([DEPRECATED_USB1_ADAPTERS], ["x$use_libusb1" = "xyes"], [libusb-1.x])
 PROCESS_ADAPTERS([HIDAPI_ADAPTERS], ["x$use_hidapi" = "xyes"], [hidapi])
@@ -827,7 +839,9 @@ echo
 echo
 echo OpenOCD configuration summary
 echo --------------------------------------------------
-m4_foreach([adapter], [USB1_ADAPTERS,
+m4_foreach([adapter], [
+    FTD2XX_ADAPTERS,
+    USB1_ADAPTERS,
 	DEPRECATED_USB1_ADAPTERS,
 	HIDAPI_ADAPTERS, HIDAPI_USB1_ADAPTERS, LIBFTDI_ADAPTERS,
 	LIBFTDI_USB1_ADAPTERS,
