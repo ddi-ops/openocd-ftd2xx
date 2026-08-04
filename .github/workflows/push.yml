@@ -23,6 +23,7 @@ jobs:
             mingw-w64-ucrt-x86_64-libftdi
             mingw-w64-ucrt-x86_64-libjaylink
             mingw-w64-ucrt-x86_64-capstone
+            autotools
             unzip
 
       - name: install ftd2xx
