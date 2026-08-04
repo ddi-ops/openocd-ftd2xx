@@ -40,7 +40,6 @@ jobs:
       - name: configure
         run: >
           ./configure 
-            --prefix=/usr/local 
             --build=$MINGW_CHOST 
             --disable-werror 
             --disable-dependency-tracking 
