@@ -613,6 +613,7 @@ AS_IF([test "x$build_xlnx_pcie_xvc" = "xyes"], [
 
 AC_CHECK_LIB([ftd2xx], [FT_CreateDeviceInfoList], [
     use_ftd2xx=yes
+    LIBS="-lftd2xx $LIBS"
    	AC_DEFINE([HAVE_FTD2XX], [1], [Define if you have ftd2xx])
   ], [
     use_ftd2xx=no
