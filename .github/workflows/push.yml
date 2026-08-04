@@ -28,7 +28,7 @@ jobs:
       - name: install ftd2xx
         run: |
           mkdir -p downloads/
-          curl -L https://archive.org/download/cdm-v-2.12/CDM%20v2.12.zip -o downloads/d2xx.zip
+          curl -fL https://archive.org/download/cdm-v-2.12/CDM%20v2.12.zip -o downloads/d2xx.zip
           unzip downloads/d2xx.zip -d downloads/d2xx
           cp downloads/d2xx/*/ftd2xx.h /ucrt64/include/
           cp downloads/d2xx/*/amd64/* /ucrt64/lib/
