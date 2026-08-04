@@ -1,0 +1,57 @@
+name: MSYS2
+on: [push, pull_request]
+
+jobs:
+  msys2-ucrt64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >
+            mingw-w64-ucrt-x86_64-git 
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-libtool
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-hidapi
+            mingw-w64-ucrt-x86_64-libusb
+            mingw-w64-ucrt-x86_64-libftdi
+            mingw-w64-ucrt-x86_64-libjaylink
+            mingw-w64-ucrt-x86_64-capstone
+      - name: install dx22
+        run: |
+          mkdir -p downloads/
+          curl -l https://ftdichip.com/wp-content/uploads/2025/03/CDM-v2.12.36.20-Universal-Driver-for-x86-WHQL-Certified.zip -o downloads/d2xx.zip
+          unzip downloads/d2xx.zip -d downloads/d2xx
+          cp downloads/d2xx/ftd2xx.h /ucrt64/include/
+          cp downloads/d2xx/amd64/* /ucrt/lib/
+
+      - name: bootstrap
+        run: ./bootstrap
+
+      - name: configure
+        run: >
+          ./configure 
+            --prefix=/usr/local 
+            --build=$MINGW_CHOST 
+            --disable-werror 
+            --disable-dependency-tracking 
+            --enable-dummy 
+
+      - name: build
+        run: make
+
+      - name: install
+        run: |
+          mkdir -p build
+          make DESTDIR=build install
+
+      - name: Publish OpenOCD packaged for windows
+        uses: actions/upload-artifact@v4
+        with:
+          path: build
