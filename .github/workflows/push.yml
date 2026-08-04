@@ -51,7 +51,7 @@ jobs:
       - name: install
         run: |
           mkdir -p build
-          make DESTDIR=build install
+          make DESTDIR="${PWD}/build" install
 
       - name: Publish OpenOCD packaged for windows
         uses: actions/upload-artifact@v4
