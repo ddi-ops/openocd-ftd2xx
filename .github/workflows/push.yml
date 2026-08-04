@@ -31,7 +31,7 @@ jobs:
           curl -L https://archive.org/download/cdm-v-2.12/CDM%20v2.12.zip -o downloads/d2xx.zip
           unzip downloads/d2xx.zip -d downloads/d2xx
           cp downloads/d2xx/*/ftd2xx.h /ucrt64/include/
-          cp downloads/d2xx/*/amd64/* /ucrt/lib/
+          cp downloads/d2xx/*/amd64/* /ucrt64/lib/
 
       - name: bootstrap
         run: ./bootstrap
