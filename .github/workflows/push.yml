@@ -23,6 +23,8 @@ jobs:
             mingw-w64-ucrt-x86_64-libftdi
             mingw-w64-ucrt-x86_64-libjaylink
             mingw-w64-ucrt-x86_64-capstone
+            unzip
+
       - name: install dx22
         run: |
           mkdir -p downloads/
