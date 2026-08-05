@@ -52,6 +52,17 @@ jobs:
         run: |
           mkdir -p build
           make DESTDIR="${PWD}/build" install
+          mkdir -p build/ucrt64/share/licenses/openocd
+          cp COPYING build/share/licenses/openocd/
+          
+          cp /ucrt64/bin/libftdi1.dll build/bin/
+          cp -r /ucrt64/share/licenses/libftdi build/share/licenses/
+          
+          cp /ucrt64/bin/libcapstone.dll build/bin/
+          cp -r /ucrt64/share/licenses/capstone build/share/licenses/
+          
+          cp /ucrt64/bin/libhidapi-0.dll build/bin/
+          cp -r /ucrt64/share/licenses/hidapi build/share/licenses/
 
       - name: Publish OpenOCD packaged for windows
         uses: actions/upload-artifact@v4
